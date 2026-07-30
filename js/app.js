@@ -1,97 +1,334 @@
 // ======================================
 // GameForge AI
 // app.js
+// Application Controller
 // ======================================
 
 
 import {
+
     loadAllAI
+
 }
+
 from "./loader.js";
 
 
+
 import {
+
     bootGameForge
+
 }
+
 from "./boot.js";
 
 
 
-function log(text){
 
-    const area =
-    document.getElementById("log");
+// ======================================
+// Log表示
+// ======================================
 
-    if(area){
 
-        area.textContent +=
-        "\n" + text;
+function addLog(message){
+
+
+    const log =
+
+    document.getElementById(
+
+        "log"
+
+    );
+
+
+
+    if(log){
+
+
+        log.textContent +=
+
+        "\n" + message;
+
 
     }
+
 
 }
 
 
 
-async function start(){
+
+// ======================================
+// UI更新
+// ======================================
+
+
+function updateStatus(status){
+
+
+
+    const aiStatus =
+
+    document.getElementById(
+
+        "aiStatus"
+
+    );
+
+
+
+    if(aiStatus){
+
+
+
+        if(
+
+            status.failed === 0
+
+        ){
+
+
+            aiStatus.textContent =
+
+            "全AIシステム起動完了";
+
+
+        }
+
+        else{
+
+
+            aiStatus.textContent =
+
+            "一部AIエラーあり";
+
+
+        }
+
+
+    }
+
+
+
+
+    addLog(
+
+        "================"
+
+    );
+
+
+
+    addLog(
+
+        "GameForge AI Online"
+
+    );
+
+
+
+    addLog(
+
+        "ロード成功: "
+
+        +
+
+        status.loaded
+
+        +
+
+        " files"
+
+    );
+
+
+
+    addLog(
+
+        "ロード失敗: "
+
+        +
+
+        status.failed
+
+        +
+
+        " files"
+
+    );
+
+
+
+
+
+    if(
+
+        status.failed > 0
+
+    ){
+
+
+        addLog(
+
+            "---- Error ----"
+
+        );
+
+
+
+        status.errors.forEach(
+
+            error => {
+
+
+                addLog(
+
+                    error.file
+
+                    +
+
+                    "\n"
+
+                    +
+
+                    error.message
+
+                );
+
+
+            }
+
+        );
+
+
+    }
+
+
+
+}
+
+
+
+
+
+// ======================================
+// 起動
+// ======================================
+
+
+async function startApp(){
+
 
 
     try{
 
 
-        log("AIロード開始");
+        addLog(
 
+            "GameForge AI Start..."
+
+        );
+
+
+
+
+        addLog(
+
+            "Loading AI Modules..."
+
+        );
+
+
+
+        const modules =
 
         await loadAllAI();
 
 
-        log("AIロード完了");
-
-
-        const result =
-        bootGameForge();
 
 
 
-        document
-        .getElementById("aiStatus")
-        .textContent =
-        "全AIシステム起動完了";
+        addLog(
 
+            "AI Modules Loaded"
 
-
-        log(
-            "GameForge AI Online"
         );
 
 
 
-        log(
-            JSON.stringify(
-                result,
-                null,
-                2
-            )
+
+
+        const status =
+
+        await bootGameForge(
+
+            modules
+
         );
+
+
+
+
+
+        updateStatus(
+
+            status
+
+        );
+
+
 
 
 
     }
+
     catch(error){
 
 
-        document
-        .getElementById("aiStatus")
-        .textContent =
-        "起動エラー";
+
+        console.error(error);
 
 
-        log(
-            error.message
+
+        const aiStatus =
+
+        document.getElementById(
+
+            "aiStatus"
+
         );
 
 
-        console.error(error);
+
+        if(aiStatus){
+
+
+            aiStatus.textContent =
+
+            "起動失敗";
+
+
+        }
+
+
+
+
+        addLog(
+
+            "SYSTEM ERROR"
+
+        );
+
+
+
+        addLog(
+
+            error.message
+
+        );
+
 
 
     }
@@ -101,4 +338,23 @@ async function start(){
 
 
 
-start();
+
+
+// ======================================
+// Start
+// ======================================
+
+
+window.addEventListener(
+
+    "DOMContentLoaded",
+
+    ()=>{
+
+
+        startApp();
+
+
+    }
+
+);
