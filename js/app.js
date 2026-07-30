@@ -1,181 +1,104 @@
 // ======================================
 // GameForge AI
 // app.js
-// Application Controller
 // ======================================
 
 
-import "./loader.js";
+import {
+    loadAllAI
+}
+from "./loader.js";
 
 
 import {
-
-    bootGameForge,
-    getBootStatus
-
+    bootGameForge
 }
-
 from "./boot.js";
 
 
 
+function log(text){
 
-// ======================================
-// DOM準備
-// ======================================
+    const area =
+    document.getElementById("log");
 
+    if(area){
 
-window.addEventListener(
-
-    "DOMContentLoaded",
-
-    ()=>{
-
-
-        startApp();
-
+        area.textContent +=
+        "\n" + text;
 
     }
 
-);
+}
 
 
 
-
-// ======================================
-// アプリ起動
-// ======================================
+async function start(){
 
 
-function startApp(){
+    try{
 
 
+        log("AIロード開始");
 
-    const result =
 
+        await loadAllAI();
+
+
+        log("AIロード完了");
+
+
+        const result =
         bootGameForge();
 
 
 
-    updateUI(
-
-        result
-
-    );
-
-
-
-}
+        document
+        .getElementById("aiStatus")
+        .textContent =
+        "全AIシステム起動完了";
 
 
 
-
-
-// ======================================
-// UI更新
-// ======================================
-
-
-function updateUI(
-
-    status
-
-){
-
-
-
-    const aiStatus =
-
-        document.getElementById(
-
-            "aiStatus"
-
+        log(
+            "GameForge AI Online"
         );
 
 
 
-    const log =
-
-        document.getElementById(
-
-            "log"
-
+        log(
+            JSON.stringify(
+                result,
+                null,
+                2
+            )
         );
 
 
 
+    }
+    catch(error){
 
 
-    if(aiStatus){
+        document
+        .getElementById("aiStatus")
+        .textContent =
+        "起動エラー";
 
 
-        aiStatus.textContent =
+        log(
+            error.message
+        );
 
 
-            "GameForge AI 起動完了";
+        console.error(error);
 
 
     }
 
 
-
-
-
-    if(log){
-
-
-        log.textContent =
-
-
-            [
-
-                "System Online",
-
-                "AI Count: "
-
-                +
-
-                status.systems.length,
-
-                "Boot Time: "
-
-                +
-
-                new Date(
-
-                    status.time
-
-                ).toLocaleString()
-
-
-            ]
-
-            .join(
-
-                "\n"
-
-            );
-
-
-    }
-
-
-
 }
 
 
 
-
-
-// ======================================
-// 外部取得用
-// ======================================
-
-
-export function getAppStatus(){
-
-
-    return getBootStatus();
-
-
-}
+start();
