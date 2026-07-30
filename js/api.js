@@ -105,7 +105,7 @@ export async function chat(history){
 
         body:JSON.stringify({
 
-            model:"gpt-5",
+             model:"gpt-5.5-mini",
 
             messages:buildMessages(history),
 
