@@ -1,61 +1,12 @@
 // ======================================
 // GameForge AI
 // boot.js
-// System Boot Manager
+// Boot Manager
 // ======================================
 
 
 
-import {
-
-    getMasterAIInfo,
-    registerAI
-
-}
-
-from "./ai/coreAI/masterAI.js";
-
-
-
-import {
-
-    getSystemManagerAIInfo,
-    registerSystem
-
-}
-
-from "./ai/coreAI/systemManagerAI.js";
-
-
-
-import {
-
-    getDecisionAIInfo
-
-}
-
-from "./ai/coreAI/decisionAI.js";
-
-
-
-import {
-
-    getCommandAIInfo
-
-}
-
-from "./ai/coreAI/commandAI.js";
-
-
-
-
-
-// ======================================
-// Boot Data
-// ======================================
-
-
-const bootData = {
+let bootStatus = {
 
 
     started:false,
@@ -64,7 +15,13 @@ const bootData = {
     time:null,
 
 
-    systems:[]
+    loaded:0,
+
+
+    failed:0,
+
+
+    errors:[]
 
 
 };
@@ -72,183 +29,142 @@ const bootData = {
 
 
 
-// ======================================
-// 起動チェック
-// ======================================
-
-
-function checkEnvironment(){
-
-
-    return {
-
-
-        browser:
-
-        typeof window !== "undefined",
-
-
-
-        storage:
-
-        typeof localStorage !== "undefined",
-
-
-
-        module:
-
-        true
-
-
-    };
-
-
-}
-
-
-
-
 
 // ======================================
-// AI登録
+// 起動処理
 // ======================================
 
 
-function initializeAI(){
-
-
-
-    const aiList=[
-
-
-        getMasterAIInfo(),
-
-
-        getSystemManagerAIInfo(),
-
-
-        getDecisionAIInfo(),
-
-
-        getCommandAIInfo()
-
-
-    ];
-
-
-
-    aiList.forEach(ai=>{
-
-
-        registerAI({
-
-
-            name:ai.name,
-
-
-            version:ai.version
-
-
-        });
-
-
-    });
-
-
-
-    return aiList;
-
-
-}
-
-
-
-
-
-// ======================================
-// システム登録
-// ======================================
-
-
-function initializeSystems(){
-
-
-    const systems=[
-
-
-        "Generator System",
-
-
-        "Testing System",
-
-
-        "Network System",
-
-
-        "Learning System"
-
-
-    ];
-
-
-
-    systems.forEach(name=>{
-
-
-        registerSystem({
-
-
-            name,
-
-
-            type:"AI"
-
-
-        });
-
-
-    });
-
-
-
-    return systems;
-
-
-}
-
-
-
-
-
-// ======================================
-// 起動
-// ======================================
-
-
-export function bootGameForge(){
+export async function bootGameForge(loadResult){
 
 
 
     console.log(
 
-        "Starting GameForge AI..."
+        "GameForge AI Boot Start"
 
     );
 
 
 
-    const environment =
 
-        checkEnvironment();
+    const successModules =
+
+        loadResult.filter(
+
+            module =>
+
+            module.status === "loaded"
+
+        );
 
 
 
-    if(!environment.browser){
+
+    const errorModules =
+
+        loadResult.filter(
+
+            module =>
+
+            module.status === "error"
+
+        );
 
 
-        throw new Error(
 
-            "Browser environment error"
+
+
+
+    bootStatus = {
+
+
+        started:true,
+
+
+        time:
+
+        new Date()
+
+        .toLocaleString(
+
+            "ja-JP"
+
+        ),
+
+
+
+        loaded:
+
+        successModules.length,
+
+
+
+        failed:
+
+        errorModules.length,
+
+
+
+        errors:
+
+        errorModules
+
+
+
+
+    };
+
+
+
+
+
+
+
+    console.log(
+
+        "Loaded AI:",
+
+        bootStatus.loaded
+
+    );
+
+
+
+    console.log(
+
+        "Failed AI:",
+
+        bootStatus.failed
+
+    );
+
+
+
+
+
+    if(
+
+        bootStatus.failed === 0
+
+    ){
+
+
+        console.log(
+
+            "GameForge AI Online"
+
+        );
+
+
+    }
+
+    else{
+
+
+        console.warn(
+
+            "一部AIロード失敗"
 
         );
 
@@ -259,54 +175,8 @@ export function bootGameForge(){
 
 
 
-    const ai =
+    return bootStatus;
 
-        initializeAI();
-
-
-
-    const systems =
-
-        initializeSystems();
-
-
-
-
-
-    bootData.started=true;
-
-
-    bootData.time=
-
-        Date.now();
-
-
-
-    bootData.systems=
-
-        systems;
-
-
-
-
-
-    console.log(
-
-        "GameForge AI Boot Complete"
-
-    );
-
-
-
-    console.log(
-
-        ai
-
-    );
-
-
-
-    return bootData;
 
 
 }
@@ -323,7 +193,7 @@ export function bootGameForge(){
 export function getBootStatus(){
 
 
-    return bootData;
+    return bootStatus;
 
 
 }
