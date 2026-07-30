@@ -56,11 +56,42 @@ AI Game Development System
 </section>
 
 
+
+<section id="aiChat">
+
+<h2>AI Chat</h2>
+
+<div id="apiKeyBar">
+<input id="apiKeyInput" type="password" placeholder="OpenAI APIキーを貼り付け">
+<button id="apiKeySaveButton">保存</button>
+</div>
+
+<div id="chat" class="chat-messages"></div>
+
+<div class="chat-input-row">
+<input id="chatInput" type="text" placeholder="作りたいゲームの内容を入力...">
+<button id="sendButton">送信</button>
+</div>
+
+</section>
+
+
+
+<section id="filesSection">
+
+<h2>Project Files</h2>
+
+<div id="fileList"></div>
+
+</section>
+
+
 </main>
 
 
 
 <script type="module" src="./js/app.js"></script>
+<script type="module" src="./js/chatController.js"></script>
 
 
 </body>
