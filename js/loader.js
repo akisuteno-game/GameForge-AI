@@ -12,10 +12,10 @@ const modules = [
     // Core AI
     // ==========================
 
-    "./ai/coreAI/masterAI.js",
-    "./ai/coreAI/systemManagerAI.js",
-    "./ai/coreAI/decisionAI.js",
-    "./ai/coreAI/commandAI.js",
+    "./coreAI/masterAI.js",
+    "./coreAI/systemManagerAI.js",
+    "./coreAI/decisionAI.js",
+    "./coreAI/commandAI.js",
 
 
 
