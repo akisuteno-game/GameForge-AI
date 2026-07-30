@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameForge AI</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <h1>🎮 GameForge AI</h1>
+
+        <button id="newChat">
+            ＋ 新しいチャット
+        </button>
+
+        <hr>
+
+        <div id="chatHistory"></div>
+
+        <hr>
+
+        <button id="gameDesign">
+            🎲 ゲーム設計
+        </button>
+
+        <button id="codeAI">
+            💻 コード生成
+        </button>
+
+        <button id="debugAI">
+            🐞 デバッグ
+        </button>
+
+        <button id="balanceAI">
+            ⚖️ バランス調整
+        </button>
+
+        <button id="assetAI">
+            🎨 素材生成
+        </button>
+
+        <button id="settingBtn">
+            ⚙️ 設定
+        </button>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header>
+
+            <h2>GameForge AI</h2>
+
+        </header>
+
+        <section id="messages">
+
+        </section>
+
+        <footer>
+
+            <textarea
+                id="prompt"
+                placeholder="ゲームについて質問してください..."
+            ></textarea>
+
+            <button id="send">
+                送信
+            </button>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>
