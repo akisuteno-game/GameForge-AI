@@ -1,222 +1,181 @@
 // ======================================
 // GameForge AI
 // app.js
+// Application Controller
 // ======================================
 
-const messages = document.getElementById("messages");
-const promptInput = document.getElementById("prompt");
-const sendButton = document.getElementById("send");
 
-// 会話履歴
-let history = [];
+import "./loader.js";
 
-// -------------------------
-// メッセージ追加
-// -------------------------
 
-function addMessage(role, text) {
+import {
 
-    const div = document.createElement("div");
-
-    div.className = `message ${role}`;
-
-    div.textContent = text;
-
-    messages.appendChild(div);
-
-    messages.scrollTop = messages.scrollHeight;
+    bootGameForge,
+    getBootStatus
 
 }
 
-// -------------------------
-// AI応答（仮）
-// -------------------------
+from "./boot.js";
 
-function fakeAI(message){
 
-    const lower = message.toLowerCase();
 
-    if(lower.includes("html")){
 
-        return "HTMLコードを生成できます。";
+// ======================================
+// DOM準備
+// ======================================
 
-    }
 
-    if(lower.includes("css")){
+window.addEventListener(
 
-        return "CSSコードを生成できます。";
+    "DOMContentLoaded",
 
-    }
+    ()=>{
 
-    if(lower.includes("javascript")){
 
-        return "JavaScriptコードを生成できます。";
+        startApp();
+
 
     }
 
-    if(lower.includes("敵")){
+);
 
-        return "敵データを生成します。";
 
-    }
 
-    if(lower.includes("武器")){
 
-        return "武器データを生成します。";
+// ======================================
+// アプリ起動
+// ======================================
 
-    }
 
-    if(lower.includes("ui")){
+function startApp(){
 
-        return "UIデザインを提案します。";
 
-    }
 
-    return "了解しました。\n今後ここはAI APIに接続されます。";
+    const result =
 
-}
+        bootGameForge();
 
-// -------------------------
-// 送信
-// -------------------------
 
-function send(){
 
-    const text = promptInput.value.trim();
+    updateUI(
 
-    if(text==="") return;
-
-    history.push({
-
-        role:"user",
-
-        content:text
-
-    });
-
-    addMessage("user",text);
-
-    promptInput.value="";
-
-    const reply = fakeAI(text);
-
-    setTimeout(()=>{
-
-        history.push({
-
-            role:"assistant",
-
-            content:reply
-
-        });
-
-        addMessage("ai",reply);
-
-        saveHistory();
-
-    },500);
-
-}
-
-// -------------------------
-// 保存
-// -------------------------
-
-function saveHistory(){
-
-    localStorage.setItem(
-
-        "gameforge-history",
-
-        JSON.stringify(history)
+        result
 
     );
 
+
+
 }
 
-// -------------------------
-// 読み込み
-// -------------------------
 
-function loadHistory(){
 
-    const data = localStorage.getItem(
 
-        "gameforge-history"
 
-    );
+// ======================================
+// UI更新
+// ======================================
 
-    if(!data) return;
 
-    history = JSON.parse(data);
+function updateUI(
 
-    history.forEach(msg=>{
+    status
 
-        addMessage(
+){
 
-            msg.role==="user" ? "user":"ai",
 
-            msg.content
+
+    const aiStatus =
+
+        document.getElementById(
+
+            "aiStatus"
 
         );
 
-    });
 
-}
 
-// -------------------------
-// Enter送信
-// -------------------------
+    const log =
 
-promptInput.addEventListener("keydown",(e)=>{
+        document.getElementById(
 
-    if(
+            "log"
 
-        e.key==="Enter" &&
+        );
 
-        !e.shiftKey
 
-    ){
 
-        e.preventDefault();
 
-        send();
+
+    if(aiStatus){
+
+
+        aiStatus.textContent =
+
+
+            "GameForge AI 起動完了";
+
 
     }
 
-});
 
-// -------------------------
-// ボタン
-// -------------------------
 
-sendButton.addEventListener(
 
-    "click",
 
-    send
+    if(log){
 
-);
 
-// -------------------------
-// 起動
-// -------------------------
+        log.textContent =
 
-loadHistory();
 
-addMessage(
+            [
 
-    "ai",
+                "System Online",
 
-`こんにちは！
+                "AI Count: "
 
-私は GameForge AI です。
+                +
 
-・ゲーム企画
-・コード生成
-・デバッグ
-・UI設計
-・RPGデータ作成
+                status.systems.length,
 
-などを支援できます。`
-);
+                "Boot Time: "
+
+                +
+
+                new Date(
+
+                    status.time
+
+                ).toLocaleString()
+
+
+            ]
+
+            .join(
+
+                "\n"
+
+            );
+
+
+    }
+
+
+
+}
+
+
+
+
+
+// ======================================
+// 外部取得用
+// ======================================
+
+
+export function getAppStatus(){
+
+
+    return getBootStatus();
+
+
+}
